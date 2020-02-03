@@ -8,7 +8,7 @@ pipeline {
                  }
                  stage('Test') {
                  steps {
-                    sh 'inspec exec https://github.com/dev-sec/nginx-baseline --reporter cli junit:artifacts/testresults.xml'
+                    sh 'inspec exec https://github.com/dev-sec/nginx-baseline --reporter cli junit:testresults.xml'
                  }
                  }
                  stage('Prod') {
@@ -19,7 +19,7 @@ pipeline {
                 }
          post {
         always {
-            junit 'artifacts/**/*.xml'
+            junit 'testresults.xml'
         }
                }
           }
