@@ -8,7 +8,7 @@ pipeline {
                  }
                  stage('Test') {
                  steps {
-                    sh 'inspec exec https://github.com/dev-sec/nginx-baseline --reporter cli junit:testresults.xml'
+                    sh 'inspec exec https://github.com/dev-sec/linux-baseline --reporter cli junit:testresults.xml'
                  }
                  }
                  stage('Prod') {
