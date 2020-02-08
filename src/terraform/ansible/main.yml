@@ -1,0 +1,12 @@
+- hosts: all
+  gather_facts: False
+  become: true
+
+  roles:
+    - server
+    - php
+    - composer
+    - nginx
+    - ssl
+    - fluentd
+    - config
