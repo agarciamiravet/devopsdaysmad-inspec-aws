@@ -16,7 +16,8 @@ pipeline {
                             dir("${env.WORKSPACE}/src/terraform"){
                               sh 'cat $ec2sshfile'
                               sh'terraform plan -var=ssh_privatekey=$ec2sshfile'
-                              sh'terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve' 
+                              sh'terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve'
+                              sh'terraform destroy -var=ssh_privatekey=$ec2sshfile -auto-approve' 
                            }
                     }
                  }
