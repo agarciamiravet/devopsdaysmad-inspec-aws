@@ -12,11 +12,11 @@ pipeline {
                               sh "terraform init"
                            }
 
-                           withCredentials([file(credentialsId: 'aws-ec2-sshkey', variable: 'aws-ec2-sshkey')]) {
+                           withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                             dir("${env.WORKSPACE}/src/terraform"){
-                              sh 'cat $tfvars'
-                              sh'terraform plan -var=ssh_privatekey=$aws-ec2-sshkey'
-                              sh'terraform apply -var=ssh_privatekey=$aws-ec2-sshkey -auto-approve' 
+                              sh 'cat $ec2sshfile'
+                              sh'terraform plan -var=ssh_privatekey=$ec2sshfile'
+                              sh'terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve' 
                            }
                     }
                  }
