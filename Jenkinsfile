@@ -16,7 +16,7 @@ pipeline {
                             dir("${env.WORKSPACE}/src/terraform"){
                               sh 'cat $tfvars'
                               sh'terraform plan -var=ssh_privatekey=$aws-ec2-sshkey'
-                              sh'terraform apply -var=ssh_privatekey=$aws-ec2-sshkey'
+                              sh'terraform apply -var=ssh_privatekey=$aws-ec2-sshkey -auto-approve' 
                            }
                     }
                  }
