@@ -39,7 +39,7 @@ pipeline {
                  }
                   stage('Upload tests to grafana') {
                         steps {
-                             dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-gcp-platform"){                                   
+                             dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){                                   
                                    sh '''
                                         ls
                                         curl -F 'file=@results.json' -F 'platform=aws-terraform' http://localhost:5001/api/InspecResults/Upload
