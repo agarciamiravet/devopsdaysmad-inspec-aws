@@ -27,12 +27,14 @@ pipeline {
                  }
                  }                 
                  stage('Inspec Tests') {
-                 steps {                    
+                 steps {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {                    
                          dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){
                               sh '''
                                  inspec exec . -t aws:// --reporter cli junit:testresults.xml json:results.json
                               '''
                            }
+                    }
                  }
                  }
                   stage('Upload tests to grafana') {
