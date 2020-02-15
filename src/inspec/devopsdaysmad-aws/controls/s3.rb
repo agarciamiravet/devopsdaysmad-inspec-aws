@@ -1,6 +1,11 @@
 title 'Check settings of s3 bucket'
 
-bucket = "devopsdaysmadbucket"
+#Read data from terraform output
+
+terraformContent = inspec.profile.file('terraform.json')
+terraformsParams = JSON.parse(terraformContent)
+
+bucket = terraformsParams['s3_name']['value']
 
 control 'aws_check_s3_basic_settings' do
 impact 1.0

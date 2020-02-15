@@ -3,7 +3,7 @@
 
 #lock files
 *.lock
-*.xml
+**/terraform.json
 
 # .tfstate files
 *.tfstate

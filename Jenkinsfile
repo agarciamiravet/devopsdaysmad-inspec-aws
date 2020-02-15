@@ -6,7 +6,7 @@ pipeline {
                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
          }
          stages {
-                 stage('Build terraform') {
+                 stage('Build Terraform') {
                     steps {
                           dir("${env.WORKSPACE}/src/terraform"){
                               sh "terraform init"
@@ -14,23 +14,23 @@ pipeline {
 
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                             dir("${env.WORKSPACE}/src/terraform"){
-                              sh 'cat $ec2sshfile'
-                              sh'terraform plan -var=ssh_privatekey=$ec2sshfile'
-                              sh'terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve'
-                              sh'terraform destroy -var=ssh_privatekey=$ec2sshfile -auto-approve' 
+                              sh'''
+                                 terraform plan -var=ssh_privatekey=$ec2sshfile
+                                 terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve
+                                 terraform output --json > ${env.WORKSPACE}/src/inspec/devopsdaysmad-aws/files/terraform.json
+                              '''
                            }
                     }
                  }
+                 }                 
+                 stage('Inspec Tests') {
+                 steps {                    
+                         dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){
+                              sh '''
+                                 inspec exec . -t aws:// --reporter cli junit:testresults.xml json:results.json
+                              '''
+                           }
                  }
-                 stage('Test') {
-                 steps {
-                    sh 'inspec exec https://github.com/dev-sec/linux-baseline --reporter cli junit:testresults.xml'
-                 }
-                 }
-                 stage('Prod') {
-                     steps {
-                                echo "App is Prod Ready"
-                              }
                  }
                 }
          post {
