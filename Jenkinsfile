@@ -35,6 +35,16 @@ pipeline {
                            }
                  }
                  }
+                  stage('Upload tests to grafana') {
+                        steps {
+                             dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-gcp-platform"){                                   
+                                   sh '''
+                                        ls
+                                        curl -F 'file=@output.json' -F 'platform=aws-terraform' http://localhost:5001/api/InspecResults/Upload
+                                   '''                                   
+                           }                      
+                        }
+                    }
                 }
          post {
         always {
