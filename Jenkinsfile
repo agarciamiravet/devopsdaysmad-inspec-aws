@@ -17,7 +17,7 @@ pipeline {
                               sh'''
                                  terraform plan -var=ssh_privatekey=$ec2sshfile
                                  terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve
-                                 terraform output --json > ../inspec/devopsdaysmad-aws/files/terraform.json
+                                 terraform output --json >  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/inspec/devopsdaysmad-aws/files/terraform.json
                               '''
                            }
                     }
