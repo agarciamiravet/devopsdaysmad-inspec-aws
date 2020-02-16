@@ -47,6 +47,18 @@ pipeline {
                            }                      
                         }
                     }
+
+                   stage('Delete Infra') {
+                    steps {
+                           withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
+                            dir("${env.WORKSPACE}/src/terraform"){
+                              sh'''
+                                 terraform destroy -var=ssh_privatekey=$ec2sshfile -auto-approve                                 
+                              '''
+                                    }
+                           }
+                        }
+                 }
                 }
          post {
         always {
