@@ -31,8 +31,8 @@ resource "aws_instance" "web" {
   }
 
     provisioner "local-exec" {
-    command = "inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${self.public_ip}"
-  }
+      command = "sleep 2m && inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${self.public_ip}"
+    }
 
     connection {
     host = aws_instance.web.public_ip
