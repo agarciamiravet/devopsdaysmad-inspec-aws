@@ -8,7 +8,7 @@ pipeline {
                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
          }
          stages {
-                 stage('Deoloy with Terraform') {
+                 stage('Deploy with Terraform') {
                     steps {
                           dir("${env.WORKSPACE}/src/terraform"){
                               sh "terraform init"
