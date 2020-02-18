@@ -18,11 +18,8 @@ pipeline {
                             dir("${env.WORKSPACE}/src/terraform"){
                               sh'''
                                  terraform plan -var=ssh_privatekey=$ec2sshfile
+
                                  terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve 
-
-                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/ansible
-
-                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/terraform 
 
                                  mkdir -p /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/inspec/devopsdaysmad-aws/files
 
@@ -49,7 +46,7 @@ pipeline {
                                  echo "${alex}" >> inventory
                                  cat inventory                                 
                                  ls
-                                 ansible-playbook -u ubuntu --private-key alex.pem playbook.yml -i inventory -b
+                                 ansible-playbook -u ubuntu --private-key $ec2sshfile playbook.yml -i inventory -b
                               '''
                            }
                     }
@@ -58,6 +55,7 @@ pipeline {
 
                 stage('inspec nginx') {
                         steps {
+                         withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {  
                              dir("${env.WORKSPACE}/src/terraform"){    
 
@@ -72,10 +70,11 @@ pipeline {
                               echo "${myVar}" // prints 'hotness'
 
                               sh'''
-                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${alex} --reporter cli junit:testresults-nginx.xml json:results-nginx.json
+                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files $ec2sshfile --target ssh://ubuntu@${alex} --reporter cli junit:testresults-nginx.xml json:results-nginx.json
                               '''                                                                                   
                            }
-                           }                      
+                           } 
+                         }                     
                         }
                     }
 
