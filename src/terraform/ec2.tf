@@ -25,8 +25,7 @@ resource "aws_instance" "web" {
 
     inline = [
       "sudo apt-get -y update",
-      "sudo apt-get -y install nginx",
-      "sudo service nginx start",
+      "sudo apt-get -qq install python -y",
     ]
   }
 
@@ -47,3 +46,11 @@ resource "aws_instance" "web" {
     Name = "devopsmad-ec2"
   }
 }
+
+ provisioner "local-exec" {
+	command = <<EOT
+    sleep 60;
+    export ANSIBLE_HOST_KEY_CHECKING=False;
+	  ansible-playbook -u ubuntu --private-key ${var.ssh_privatekey} -i ../ansible/install_nginx_hardened.yaml
+    EOT
+  }
