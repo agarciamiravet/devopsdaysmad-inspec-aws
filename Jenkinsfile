@@ -42,12 +42,13 @@ pipeline {
                                  // FYI, trim removes leading and trailing whitespace from the string
                                  myVar = readFile('myfile.txt').trim()
 
+                                 env.alex = readFile('myfile.txt').trim() 
+
                               }
                               echo "${myVar}" // prints 'hotness'
 
                               sh'''
-                                   echo "${myVar}"
-                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${myVar}  --reporter cli                                     
+                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${alex}  --reporter cli                                     
                               '''                                                                                   
                            }                      
                         }
