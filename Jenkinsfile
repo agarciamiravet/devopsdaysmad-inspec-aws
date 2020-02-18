@@ -28,9 +28,11 @@ pipeline {
 
                                  terraform output aws_ec2_public_address > myfile.txt
 
-                                 env.alex = readFile('myfile.txt').trim() 
-
                               '''
+
+                               script {
+                                 env.alex = readFile('myfile.txt').trim() 
+                               }
                            }
                     }
                  }
