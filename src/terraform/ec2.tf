@@ -29,10 +29,12 @@ resource "aws_instance" "web" {
     ]
   }
 
+/*
   provisioner "local-exec" {
     working_dir = "../ansible/"
     command     = "ansible-playbook -u ubuntu --private-key ${var.ssh_privatekey} install_nginx_hardened.yaml -i ${self.public_ip},"
 }
+*/
 
 /*
    provisioner "local-exec" {
