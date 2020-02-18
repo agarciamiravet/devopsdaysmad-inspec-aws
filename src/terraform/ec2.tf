@@ -30,11 +30,6 @@ resource "aws_instance" "web" {
   }
 
   provisioner "local-exec" {
-    environment {
-        PUBLIC_IP  = "${self.ipv4_address}"
-        PRIVATE_IP = "${self.ipv4_address_private}"
-    }
-
     working_dir = "../ansible/"
     command     = "ansible-playbook -u ubuntu --private-key ${var.ssh_key_private} install_nginx_hardened.yaml -i ${self.public_ip},"
 }
