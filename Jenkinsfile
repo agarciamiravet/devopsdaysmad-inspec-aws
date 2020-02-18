@@ -8,7 +8,7 @@ pipeline {
                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
          }
          stages {
-                 stage('Build Terraform') {
+                 stage('Deoloy with Terraform') {
                     steps {
                           dir("${env.WORKSPACE}/src/terraform"){
                               sh "terraform init"
@@ -37,7 +37,7 @@ pipeline {
                  }
                  }
 
-                 stage('Ansible') {
+                 stage('Deploy Nginx with Ansible') {
                     steps {                        
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                             dir("${env.WORKSPACE}/src/ansible"){
@@ -53,7 +53,7 @@ pipeline {
                  }
                  }
 
-                stage('inspec nginx') {
+                stage('Inspec Tests Nginx') {
                         steps {
                          withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {  
@@ -78,7 +78,7 @@ pipeline {
                         }
                     }
 
-                 stage('Inspec Tests') {
+                 stage('Inspec Tests Infrastructure') {
                  steps {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {                    
                          dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){
@@ -89,7 +89,7 @@ pipeline {
                     }
                  }
                  }
-                  stage('Upload tests to grafana') {
+                  stage('Upload Inspec Tests to Grafana') {
                         steps {
                              dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){                                   
                                    sh '''
@@ -105,8 +105,8 @@ pipeline {
                            }                      
                         }
                     }
-                     /*
-                   stage('Delete Infra') {
+                  
+                   stage('Destroy Infrastructure') {
                     steps {
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                             dir("${env.WORKSPACE}/src/terraform"){
