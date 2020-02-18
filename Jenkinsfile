@@ -1,4 +1,4 @@
-ec2Ip = '0'
+def ec2Ip = ''
 
 pipeline {
          agent any
