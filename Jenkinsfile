@@ -1,4 +1,3 @@
-def ec2Ip = ''
 
 pipeline {
          agent any
@@ -20,9 +19,7 @@ pipeline {
                                  terraform plan -var=ssh_privatekey=$ec2sshfile
                                  terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve 
 
-                                 ec2Ip = terraform output aws_ec2_public_address
-
-                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/ansible   
+                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/terraform   
 
                                  mkdir -p /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/inspec/devopsdaysmad-aws/files
 
@@ -45,8 +42,9 @@ pipeline {
                  }
                    stage('inspec nginx') {
                         steps {
-                             dir("${env.WORKSPACE}/src/ansible"){                                   
+                             dir("${env.WORKSPACE}/src/terraform"){                                   
                                    sh '''
+                                       def ec2Ip = terraform output aws_ec2_public_address
                                         ls
                                         inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${ec2Ip}                                       
                                    '''                                   
