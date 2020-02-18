@@ -5,7 +5,7 @@
   become_method: sudo
   tasks:
     - name: Install nginx
-      apt-get:
+      apt:
         name: nginx
         state: latest
 
