@@ -29,19 +29,9 @@ pipeline {
                            }
                     }
                  }
-                 }                 
-                 stage('Inspec Tests') {
-                 steps {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {                    
-                         dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){
-                              sh '''
-                                 inspec exec . -t aws:// --reporter cli junit:testresults.xml json:results.json
-                              '''
-                           }
-                    }
                  }
-                 }
-                   stage('inspec nginx') {
+
+                stage('inspec nginx') {
                         steps {
                              dir("${env.WORKSPACE}/src/terraform"){    
                                 script {
@@ -64,6 +54,18 @@ pipeline {
                            }                      
                         }
                     }
+
+                 stage('Inspec Tests') {
+                 steps {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {                    
+                         dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){
+                              sh '''
+                                 inspec exec . -t aws:// --reporter cli junit:testresults.xml json:results.json
+                              '''
+                           }
+                    }
+                 }
+                 }
                   stage('Upload tests to grafana') {
                         steps {
                              dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){                                   
