@@ -49,7 +49,7 @@ pipeline {
                            }                      
                         }
                     }
-
+                  /*
                    stage('Delete Infra') {
                     steps {
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
@@ -62,6 +62,7 @@ pipeline {
                         }
                  }
                 }
+                */
          post {
         always {
             junit '**/src/inspec/devopsdaysmad-aws/*.xml'
