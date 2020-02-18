@@ -43,7 +43,8 @@ resource "aws_instance" "web" {
    provisioner "local-exec" {
      working_dir = "../ansible/"
 	command = <<EOT
-    sleep 60;    
+    sleep 60;
+    ansible-galaxy install dev-sec.nginx-hardening    
     export ANSIBLE_HOST_KEY_CHECKING=False;
 	  ansible-playbook -u ubuntu --private-key alex.pem install_nginx_hardened.yaml -i ${self.public_ip}
     EOT
