@@ -31,7 +31,7 @@ pipeline {
                  }
                  }
 
-                stage('inspec nginx') {
+                stage('Inspec-nginx') {
                         steps {
                              dir("${env.WORKSPACE}/src/terraform"){    
                                 script {
@@ -46,11 +46,7 @@ pipeline {
                                  myVar = readFile('myfile.txt').trim()
 
                               }
-                              echo "${myVar}" // prints 'hotness'
-
-                              sh'''
-                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${myVar}  --reporter cli                                     
-                              '''                                                                                   
+                              echo "${myVar}" // prints 'hotness'                                                                                 
                            }                      
                         }
                     }
