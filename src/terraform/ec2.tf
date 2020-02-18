@@ -28,21 +28,26 @@ resource "aws_instance" "web" {
       "sudo apt-get -qq install python -y",
     ]
   }
-
+/*
+  provisioner "local-exec" {
+    working_dir = "../ansible/"
+    command     = "ansible-galaxy install dev-sec.nginx-hardening,"
+}
+  
   provisioner "local-exec" {
     working_dir = "../ansible/"
     command     = "ansible-playbook -u ubuntu --private-key alex.pem install_nginx_hardened.yaml -i ${self.public_ip},"
 }
+*/
 
-/*
    provisioner "local-exec" {
+     working_dir = "../ansible/"
 	command = <<EOT
     sleep 60;
     export ANSIBLE_HOST_KEY_CHECKING=False;
-	  ansible-playbook -u ubuntu --private-key ${var.ssh_privatekey} -i ../ansible/install_nginx_hardened.yaml
+	  ansible-playbook -u ubuntu --private-key alex.pem install_nginx_hardened.yaml -i ${self.public_ip}
     EOT
   }
-*/
     #provisioner "local-exec" {
       #command = "sleep 5m && inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${self.public_ip}"
     #}
