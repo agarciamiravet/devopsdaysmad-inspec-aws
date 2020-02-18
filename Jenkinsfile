@@ -71,9 +71,12 @@ pipeline {
                                    sh '''
                                         ls
                                         curl -F 'file=@results.json' -F 'platform=aws-terraform' http://localhost:5001/api/InspecResults/Upload
-
-                                        curl -F 'file=@results-nginx.json' -F 'platform=aws-ec2-nginx' http://localhost:5001/api/InspecResults/Upload
-
+                                   '''                                   
+                           }
+                             dir("${env.WORKSPACE}/src/terraform"){                                   
+                                   sh '''
+                                        ls
+                                           curl -F 'file=@results-nginx.json' -F 'platform=aws-ec2-nginx' http://localhost:5001/api/InspecResults/Upload
                                    '''                                   
                            }                      
                         }
