@@ -3,8 +3,10 @@
   become_user: root
   become_method: sudo
 
-    tasks:
-      - name: Install nginx 1.12
-        command: amazon-linux-extras install nginx1.12
-      - name: Start Nginx
-        service: name=nginx enabled=yes state=started
+  tasks:
+    - name: ensure nginx is at the latest version
+      command: amazon-linux-extras install nginx1.12
+    - name: start nginx
+      service:
+          name: nginx
+          state: started
