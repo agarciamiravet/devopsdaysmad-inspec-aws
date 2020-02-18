@@ -48,6 +48,7 @@ pipeline {
                                 }       
 
                                 sh'''
+                                  echo 'alex'
                                   inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${ec2Ip}                                       
                                 '''                                                                                   
                            }                      
