@@ -57,7 +57,7 @@ pipeline {
                 stage('inspec nginx') {
                         steps {
                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {  
-                             dir("${env.WORKSPACE}/src/terraform"){    
+                             dir("${env.WORKSPACE}/src/ansible"){    
 
                               echo "${myVar}" // prints 'initial_value'
                               sh 'terraform output aws_ec2_public_address > myfile.txt'
