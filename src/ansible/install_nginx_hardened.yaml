@@ -1,3 +1,0 @@
-- hosts: localhost
-  roles:
-    - dev-sec.nginx-hardening

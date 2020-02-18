@@ -20,17 +20,35 @@ pipeline {
                                  terraform plan -var=ssh_privatekey=$ec2sshfile
                                  terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve 
 
-                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/terraform   
+                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/ansible   
 
                                  mkdir -p /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/inspec/devopsdaysmad-aws/files
 
                                  terraform output --json >  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/inspec/devopsdaysmad-aws/files/terraform.json
+
+                                 terraform output aws_ec2_public_address > myfile.txt
+
+                                 env.alex = readFile('myfile.txt').trim() 
+
                               '''
                            }
                     }
                  }
                  }
 
+                 stage('Ansible') {
+                    steps {                        
+                           withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
+                            dir("${env.WORKSPACE}/src/ansible"){
+                              sh'''
+                                 ansible-playbook -u ubuntu --private-key alex.pem playbook.yml -i ${alex}
+                              '''
+                           }
+                    }
+                 }
+                 }
+
+                  /*
                 stage('inspec nginx') {
                         steps {
                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {  
@@ -53,6 +71,8 @@ pipeline {
                            }                      
                         }
                     }
+
+                    */
 
                  stage('Inspec Tests') {
                  steps {
