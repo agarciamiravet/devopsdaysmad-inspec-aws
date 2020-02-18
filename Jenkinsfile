@@ -44,7 +44,7 @@ pipeline {
                         steps {
                              dir("${env.WORKSPACE}/src/terraform"){    
                                 script {
-                                    ec2Ip = terraform output aws_ec2_public_address
+                                    def ec2Ip = terraform output aws_ec2_public_address
                                     inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${ec2Ip}                                       
                                 }                                                                                          
                            }                      
