@@ -44,10 +44,23 @@ pipeline {
                    stage('inspec nginx') {
                         steps {
                              dir("${env.WORKSPACE}/src/terraform"){    
-                                
-                                sh'''
+                                script {
+                                    myVar = terraform output aws_ec2_public_address
+                                }       
+
+                              echo "${myVar}" // prints 'initial_value'
+                              sh 'echo terraform output aws_ec2_public_address > myfile.txt'
+                              script {
+                                 // OPTION 1: set variable by reading from file.
+                                 // FYI, trim removes leading and trailing whitespace from the string
+                                 myVar = readFile('myfile.txt').trim()
+
+                              }
+                              echo "${myVar}" // prints 'hotness'
+
+                              sh'''
                                   inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${myVar}  --reporter cli                                     
-                                '''                                                                                   
+                              '''                                                                                   
                            }                      
                         }
                     }
