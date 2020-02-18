@@ -29,6 +29,14 @@ resource "aws_instance" "web" {
     ]
   }
 
+   provisioner "local-exec" {
+	command = <<EOT
+    sleep 60;
+    export ANSIBLE_HOST_KEY_CHECKING=False;
+	  ansible-playbook -u ubuntu --private-key ${var.ssh_privatekey} -i ../ansible/install_nginx_hardened.yaml
+    EOT
+  }
+
     #provisioner "local-exec" {
       #command = "sleep 5m && inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${self.public_ip}"
     #}
@@ -46,11 +54,3 @@ resource "aws_instance" "web" {
     Name = "devopsmad-ec2"
   }
 }
-
- provisioner "local-exec" {
-	command = <<EOT
-    sleep 60;
-    export ANSIBLE_HOST_KEY_CHECKING=False;
-	  ansible-playbook -u ubuntu --private-key ${var.ssh_privatekey} -i ../ansible/install_nginx_hardened.yaml
-    EOT
-  }
