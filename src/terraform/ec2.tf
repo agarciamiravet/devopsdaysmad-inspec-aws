@@ -29,6 +29,17 @@ resource "aws_instance" "web" {
     ]
   }
 
+  provisioner "local-exec" {
+    environment {
+        PUBLIC_IP  = "${self.ipv4_address}"
+        PRIVATE_IP = "${self.ipv4_address_private}"
+    }
+
+    working_dir = "../ansible/"
+    command     = "ansible-playbook -u ubuntu --private-key ${var.ssh_key_private} install_nginx_hardened.yaml -i ${self.public_ip},"
+}
+
+/*
    provisioner "local-exec" {
 	command = <<EOT
     sleep 60;
@@ -36,7 +47,7 @@ resource "aws_instance" "web" {
 	  ansible-playbook -u ubuntu --private-key ${var.ssh_privatekey} -i ../ansible/install_nginx_hardened.yaml
     EOT
   }
-
+*/
     #provisioner "local-exec" {
       #command = "sleep 5m && inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${self.public_ip}"
     #}
