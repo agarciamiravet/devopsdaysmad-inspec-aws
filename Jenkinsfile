@@ -45,13 +45,9 @@ pipeline {
                               sh'''
                                  echo "[all]" >> inventory
                                  echo "${alex}" >> inventory
-
-                                 cat inventory
-                                 
+                                 cat inventory                                 
                                  ls
-
-                                 ANSIBLE_HOST_KEY_CHECKING=False
-                                 ansible-playbook -u ubuntu --private-key $ec2sshfile playbook.yml -i inventory -b
+                                 ansible-playbook -u ubuntu --private-key alex.pem playbook.yml -i inventory -b
                               '''
                            }
                     }
