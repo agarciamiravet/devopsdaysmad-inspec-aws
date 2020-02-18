@@ -54,7 +54,6 @@ pipeline {
                  }
                  }
 
-                  /*
                 stage('inspec nginx') {
                         steps {
                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {  
@@ -77,8 +76,6 @@ pipeline {
                            }                      
                         }
                     }
-
-                    */
 
                  stage('Inspec Tests') {
                  steps {
