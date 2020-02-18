@@ -24,6 +24,7 @@ resource "aws_instance" "web" {
 
     inline = [
       "sudo apt-get -y update",
+      "sudo apt-get -qq install python -y",
     ]
   }
 
