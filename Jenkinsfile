@@ -20,7 +20,9 @@ pipeline {
                                  terraform plan -var=ssh_privatekey=$ec2sshfile
                                  terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve 
 
-                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/ansible   
+                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/ansible  
+
+                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/terraform   
 
                                  mkdir -p /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/inspec/devopsdaysmad-aws/files
 
@@ -57,7 +59,7 @@ pipeline {
                 stage('inspec nginx') {
                         steps {
                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {  
-                             dir("${env.WORKSPACE}/src/ansible"){    
+                             dir("${env.WORKSPACE}/src/terraform"){    
 
                               echo "${myVar}" // prints 'initial_value'
                               sh 'terraform output aws_ec2_public_address > myfile.txt'
