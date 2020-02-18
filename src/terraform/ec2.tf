@@ -20,38 +20,22 @@ resource "aws_instance" "web" {
 
   key_name = "alex"
 
- 
    provisioner "remote-exec" {
 
     inline = [
       "sudo apt-get -y update",
-      "sudo apt-get -qq install python -y",
+      "sudo apt-get -y install nginx",
+      "sudo service nginx start",
     ]
   }
-/*
-  provisioner "local-exec" {
-    working_dir = "../ansible/"
-    command     = "ansible-galaxy install dev-sec.nginx-hardening,"
-}
-  
-  provisioner "local-exec" {
-    working_dir = "../ansible/"
-    command     = "ansible-playbook -u ubuntu --private-key alex.pem install_nginx_hardened.yaml -i ${self.public_ip},"
-}
-*/
 
    provisioner "local-exec" {
      working_dir = "../ansible/"
 	command = <<EOT
     sleep 60;
-    ansible-galaxy install dev-sec.nginx-hardening    
-    export ANSIBLE_HOST_KEY_CHECKING=False;
-	  ansible-playbook -u ubuntu --private-key alex.pem install_nginx_hardened.yaml -i ${self.public_ip}
+    inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${self.public_ip}
     EOT
   }
-    #provisioner "local-exec" {
-      #command = "sleep 5m && inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${self.public_ip}"
-    #}
 
     connection {
     host = aws_instance.web.public_ip
