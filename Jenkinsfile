@@ -33,13 +33,12 @@ pipeline {
 
                 stage('inspec nginx') {
                         steps {
+                           catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {  
                              dir("${env.WORKSPACE}/src/terraform"){    
 
                               echo "${myVar}" // prints 'initial_value'
                               sh 'terraform output aws_ec2_public_address > myfile.txt'
                               script {
-                                 // OPTION 1: set variable by reading from file.
-                                 // FYI, trim removes leading and trailing whitespace from the string
                                  myVar = readFile('myfile.txt').trim()
 
                                  env.alex = readFile('myfile.txt').trim() 
@@ -48,8 +47,9 @@ pipeline {
                               echo "${myVar}" // prints 'hotness'
 
                               sh'''
-                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${alex}  --reporter cli                                     
+                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${alex} --reporter cli junit:testresults-nginx.xml json:results-nginx.json
                               '''                                                                                   
+                           }
                            }                      
                         }
                     }
@@ -71,6 +71,9 @@ pipeline {
                                    sh '''
                                         ls
                                         curl -F 'file=@results.json' -F 'platform=aws-terraform' http://localhost:5001/api/InspecResults/Upload
+
+                                        curl -F 'file=@results-nginx.json' -F 'platform=aws-ec2-nginx' http://localhost:5001/api/InspecResults/Upload
+
                                    '''                                   
                            }                      
                         }
