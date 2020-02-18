@@ -43,6 +43,9 @@ pipeline {
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                             dir("${env.WORKSPACE}/src/ansible"){
                               sh'''
+                                 echo "[all]" >> inventory
+                                 echo "${alex}" >> inventory
+                                 
                                  ANSIBLE_HOST_KEY_CHECKING=False
                                  ansible-playbook -u ubuntu --private-key alex.pem playbook.yml -i ${alex} -b
                               '''
