@@ -1,3 +1,7 @@
+output "aws_ec2_public_address" {
+  value = aws_instance.web.public_ip
+}
+
 output "address" {
   value = aws_elb.web.dns_name
 }

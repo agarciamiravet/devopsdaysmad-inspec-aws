@@ -1,3 +1,5 @@
+ec2Ip = '0'
+
 pipeline {
          agent any
          environment {
@@ -17,6 +19,8 @@ pipeline {
                               sh'''
                                  terraform plan -var=ssh_privatekey=$ec2sshfile
                                  terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve 
+
+                                 ec2Ip = terraform output aws_ec2_public_address
 
                                  mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/ansible   
 
@@ -39,6 +43,16 @@ pipeline {
                     }
                  }
                  }
+                   stage('inspec nginx') {
+                        steps {
+                             dir("${env.WORKSPACE}/src/ansible"){                                   
+                                   sh '''
+                                        ls
+                                        inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${ec2Ip}                                       
+                                   '''                                   
+                           }                      
+                        }
+                    }
                   stage('Upload tests to grafana') {
                         steps {
                              dir("${env.WORKSPACE}/src/inspec/devopsdaysmad-aws"){                                   

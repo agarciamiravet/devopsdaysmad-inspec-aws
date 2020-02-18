@@ -29,14 +29,6 @@ resource "aws_instance" "web" {
     ]
   }
 
-   provisioner "local-exec" {
-     working_dir = "../ansible/"
-	command = <<EOT
-    sleep 60;
-    inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${self.public_ip}
-    EOT
-  }
-
     connection {
     host = aws_instance.web.public_ip
     type     = "ssh"
