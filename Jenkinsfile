@@ -16,7 +16,9 @@ pipeline {
                             dir("${env.WORKSPACE}/src/terraform"){
                               sh'''
                                  terraform plan -var=ssh_privatekey=$ec2sshfile
-                                 terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve                                 
+                                 terraform apply -var=ssh_privatekey=$ec2sshfile -auto-approve 
+
+                                 mv $ec2sshfile  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/ansible   
 
                                  mkdir -p /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/inspec/devopsdaysmad-aws/files
 
