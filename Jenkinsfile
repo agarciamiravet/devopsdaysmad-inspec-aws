@@ -36,7 +36,7 @@ pipeline {
                              dir("${env.WORKSPACE}/src/terraform"){    
 
                               echo "${myVar}" // prints 'initial_value'
-                              sh 'echo terraform output aws_ec2_public_address > myfile.txt'
+                              sh 'terraform output aws_ec2_public_address > myfile.txt'
                               script {
                                  // OPTION 1: set variable by reading from file.
                                  // FYI, trim removes leading and trailing whitespace from the string
@@ -46,6 +46,7 @@ pipeline {
                               echo "${myVar}" // prints 'hotness'
 
                               sh'''
+                                   echo "${myVar}"
                                   inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${myVar}  --reporter cli                                     
                               '''                                                                                   
                            }                      
