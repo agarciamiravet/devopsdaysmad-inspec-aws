@@ -1,3 +1,4 @@
+myVar = 'initial_value'
 
 pipeline {
          agent any
@@ -44,12 +45,12 @@ pipeline {
                         steps {
                              dir("${env.WORKSPACE}/src/terraform"){    
                                 script {
-                                    def ec2Ip = terraform output aws_ec2_public_address
+                                    myVar = terraform output aws_ec2_public_address
                                 }       
 
                                 sh'''
                                   echo 'alex'
-                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${ec2Ip}                                       
+                                  inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files alex.pem --target ssh://ubuntu@${myVar}                                       
                                 '''                                                                                   
                            }                      
                         }
@@ -80,7 +81,7 @@ pipeline {
                 }
          post {
         always {
-            junit '**/src/inspec/devopsdaysmad-aws/*.xml'
+            junit '**/src/**/*.xml'
         }
                }
 }
