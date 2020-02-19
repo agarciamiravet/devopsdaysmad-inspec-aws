@@ -58,7 +58,7 @@ pipeline {
                     stage('Deploy Nginx with Ansible 2') {
                     steps {                        
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
-                            dir("${env.WORKSPACE}/src/ansible2-hard"){
+                            dir("${env.WORKSPACE}/src/ansible-hard"){
                               sh'''
                                  echo "[all]" >> inventory
                                  echo "${alex}" >> inventory
