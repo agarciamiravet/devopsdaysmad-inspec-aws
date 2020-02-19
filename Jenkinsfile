@@ -36,8 +36,7 @@ pipeline {
                     }
                  }
                  }
-
-               /*
+                 
                  stage('Deploy Nginx with Ansible') {
                     steps {                        
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
@@ -53,9 +52,8 @@ pipeline {
                     }
                  }
                  }
-                 */
 
-                    stage('Deploy Nginx with Ansible 2') {
+                    stage('Hardening Nginx with Ansible') {
                     steps {                        
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                             dir("${env.WORKSPACE}/src/ansible-hard"){
