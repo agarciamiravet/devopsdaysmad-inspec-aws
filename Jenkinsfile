@@ -37,10 +37,28 @@ pipeline {
                  }
                  }
 
+               /*
                  stage('Deploy Nginx with Ansible') {
                     steps {                        
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                             dir("${env.WORKSPACE}/src/ansible"){
+                              sh'''
+                                 echo "[all]" >> inventory
+                                 echo "${alex}" >> inventory
+                                 cat inventory                                 
+                                 ls
+                                 ansible-playbook -u ubuntu --private-key $ec2sshfile playbook.yml -i inventory -b
+                              '''
+                           }
+                    }
+                 }
+                 }
+                 */
+
+                    stage('Deploy Nginx with Ansible 2') {
+                    steps {                        
+                           withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
+                            dir("${env.WORKSPACE}/src/ansible2--hard"){
                               sh'''
                                  echo "[all]" >> inventory
                                  echo "${alex}" >> inventory
@@ -59,7 +77,7 @@ pipeline {
                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {  
                              dir("${env.WORKSPACE}/src/terraform"){    
 
-                              echo "${myVar}" // prints 'initial_value'
+                              echo "${myVar}" 
                               sh 'terraform output aws_ec2_public_address > myfile.txt'
                               script {
                                  myVar = readFile('myfile.txt').trim()
@@ -67,7 +85,7 @@ pipeline {
                                  env.alex = readFile('myfile.txt').trim() 
 
                               }
-                              echo "${myVar}" // prints 'hotness'
+                              echo "${myVar}" 
 
                               sh'''
                                   inspec exec https://github.com/dev-sec/nginx-baseline.git --key-files $ec2sshfile --target ssh://ubuntu@${alex} --reporter cli junit:testresults-nginx.xml json:results-nginx.json
@@ -105,7 +123,7 @@ pipeline {
                            }                      
                         }
                     }
-                  
+                  /*
                    stage('Destroy Infrastructure') {
                     steps {
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
@@ -117,6 +135,7 @@ pipeline {
                            }
                         }
                  }
+                 */
                 }
          post {
         always {
