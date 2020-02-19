@@ -25,25 +25,25 @@ pipeline {
 
                                  terraform output --json >  /var/lib/jenkins/workspace/devopsdaysmad-inspec-aws_master/src/inspec/devopsdaysmad-aws/files/terraform.json
 
-                                 terraform output aws_ec2_public_address > myfile.txt
+                                 terraform output aws_ec2_public_address > ec2_ip.txt
 
                               '''
 
                                script {
-                                 env.alex = readFile('myfile.txt').trim() 
+                                 env.ec2_ip = readFile('ec2_ip.txt').trim() 
                                }
                            }
                     }
                  }
                  }
-                 
+
                  stage('Deploy Nginx with Ansible') {
                     steps {                        
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
                             dir("${env.WORKSPACE}/src/ansible"){
                               sh'''
                                  echo "[all]" >> inventory
-                                 echo "${alex}" >> inventory
+                                 echo "${ec2_ip}" >> inventory
                                  cat inventory                                 
                                  ls
                                  ansible-playbook -u ubuntu --private-key $ec2sshfile playbook.yml -i inventory -b
@@ -59,7 +59,7 @@ pipeline {
                             dir("${env.WORKSPACE}/src/ansible-hard"){
                               sh'''
                                  echo "[all]" >> inventory
-                                 echo "${alex}" >> inventory
+                                 echo "${ec2_ip}" >> inventory
                                  cat inventory                                 
                                  ls
                                  ansible-playbook -u ubuntu --private-key $ec2sshfile playbook.yml -i inventory -b
@@ -121,7 +121,7 @@ pipeline {
                            }                      
                         }
                     }
-                  /*
+
                    stage('Destroy Infrastructure') {
                     steps {
                            withCredentials([file(credentialsId: 'ec2sshfile', variable: 'ec2sshfile')]) {
@@ -133,7 +133,6 @@ pipeline {
                            }
                         }
                  }
-                 */
                 }
          post {
         always {
